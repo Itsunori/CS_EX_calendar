@@ -4,8 +4,8 @@ After=network.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/libexec/tomcat10/bin/startup.sh
-ExecStop=/usr/libexec/tomcat10/bin/shutdown.sh
+ExecStart=/usr/local/tomcat/bin/startup.sh
+ExecStop=/usr/local/tomcat/bin/shutdown.sh
 RemainAfterExit=yes
 User=tomcat
 Group=tomcat

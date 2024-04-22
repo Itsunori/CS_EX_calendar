@@ -7,6 +7,5 @@ services:
     container_name: cs_ex_calendar
     environment:
       JAVA_OPTS: "-Dfile.encoding=UTF-8 -Dsun.jnu.encoding=UTF-8 -Dorg.apache.catalina.connector.CoyoteAdapter.parseBodyMethods=POST,PUT,PATCH,DELETE"
-    command: /usr/libexec/tomcat10/bin/catalina.sh run
     ports:
       - 8080:8080
