@@ -7,11 +7,31 @@
 
   <servlet>
     <servlet-name>MonthView</servlet-name>
-    <servlet-class>MonthView1</servlet-class>
+    <servlet-class>MonthView4</servlet-class>
   </servlet>
 
   <servlet-mapping>
     <servlet-name>MonthView</servlet-name>
     <url-pattern>/MonthView</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>NewSchedule</servlet-name>
+    <servlet-class>NewSchedule3</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>NewSchedule</servlet-name>
+    <url-pattern>/NewSchedule</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>ScheduleInsert</servlet-name>
+    <servlet-class>ScheduleInsert1</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>ScheduleInsert</servlet-name>
+    <url-pattern>/ScheduleInsert</url-pattern>
   </servlet-mapping>
 </web-app>

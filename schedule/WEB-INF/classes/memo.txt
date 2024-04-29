@@ -1,0 +1,31 @@
+コンパイル方法
+
+docker cp javafile.java cs_ex_calendar:/workspace/
+docker exec cs_ex_calendar javac -encoding UTF-8 -classpath "/usr/libexec/tomcat10/lib/servlet-api.jar" NewSchedule3.java
+
+変更点
+
+importのjavax→jakartaに
+
+NewSchedule　168行目のfor文を2005-2010から2020-2040に変更
+
+ScheduleInsert 144行目のnewInstance()を削除
+com.mysql.cj.jdbc.Driverとcjを追加
+
+MonthView 17行目のnewInstance()を削除
+
+
+FROM debian:bullseye
+
+WORKDIR /workspace
+
+RUN apt-get update \
+    && apt-get -y install openjdk-11-jdk-headless wget \
+    && wget https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.20/bin/apache-tomcat-10.1.20.tar.gz \
+    && tar zxvf apache-tomcat-10.1.20.tar.gz \
+    && mv apache-tomcat-10.1.20 /usr/libexec/tomcat10 \
+    && useradd -M -d /usr/libexec/tomcat10 tomcat \
+    && chown -R tomcat. /usr/libexec/tomcat10
+
+COPY ./tomcat10.service /usr/lib/systemd/system/
+COPY ./schedule.xml /usr/libexec/tomcat10/conf/Catalina/localhost/
