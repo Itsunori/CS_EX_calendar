@@ -1,31 +1,15 @@
-コンパイル方法
+変更点・注意点
 
-docker cp javafile.java cs_ex_calendar:/workspace/
-docker exec cs_ex_calendar javac -encoding UTF-8 -classpath "/usr/libexec/tomcat10/lib/servlet-api.jar" NewSchedule3.java
-
-変更点
-
-importのjavax→jakartaに
+MonthView     5以降で警告      Note: Some input files use or override a deprecated API.
+                    　　　　　　Note: Recompile with -Xlint:deprecation for details.
 
 NewSchedule　168行目のfor文を2005-2010から2020-2040に変更
 
-ScheduleInsert 144行目のnewInstance()を削除
-com.mysql.cj.jdbc.Driverとcjを追加
+ScheduleInsert 警告　Note: ScheduleInsert1.java uses or overrides a deprecated API.
+                　　 Note: Recompile with -Xlint:deprecation for details.
 
-MonthView 17行目のnewInstance()を削除
+MySQLへのログイン　%なのでjavaはどのipアドレスでもログイン可能なはずだがログインできなかった
+root@933146d14f25:/workspace# mysql -u java -p -D servletschedule
+Enter password:　****
+ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)
 
-
-FROM debian:bullseye
-
-WORKDIR /workspace
-
-RUN apt-get update \
-    && apt-get -y install openjdk-11-jdk-headless wget \
-    && wget https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.20/bin/apache-tomcat-10.1.20.tar.gz \
-    && tar zxvf apache-tomcat-10.1.20.tar.gz \
-    && mv apache-tomcat-10.1.20 /usr/libexec/tomcat10 \
-    && useradd -M -d /usr/libexec/tomcat10 tomcat \
-    && chown -R tomcat. /usr/libexec/tomcat10
-
-COPY ./tomcat10.service /usr/lib/systemd/system/
-COPY ./schedule.xml /usr/libexec/tomcat10/conf/Catalina/localhost/

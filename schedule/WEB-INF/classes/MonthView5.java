@@ -1,6 +1,6 @@
 import java.io.*;
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
 import java.util.Calendar;
 import java.sql.*;
 
@@ -9,12 +9,12 @@ public class MonthView5 extends HttpServlet{
     protected Connection conn = null;
 
     public void init() throws ServletException{
-        String url = "jdbc:mysql://localhost/servletschedule";
-        String user = "scheduleuser";
-        String password = "schedulepass";
+        String url = "mysql-container:3306/servletschedule";
+        String user = "root";
+        String password = "root";
 
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
             conn = DriverManager.getConnection(url, user, password);
         }catch (ClassNotFoundException e){
             log("ClassNotFoundException:" + e.getMessage());
@@ -38,7 +38,7 @@ public class MonthView5 extends HttpServlet{
     public void doGet(HttpServletRequest req, HttpServletResponse res)
         throws ServletException, IOException{
 
-        res.setContentType("text/html;charset=utf-8");
+        res.setContentType("text/html;charset=Shift_Jis");
         PrintWriter out = res.getWriter();
 
         int[] calendarDay;
@@ -97,7 +97,7 @@ public class MonthView5 extends HttpServlet{
 
         sb.append("<html lang=\"ja\">");
         sb.append("<head>");
-        sb.append("<meta http-equiv=\"Content-Type\" Content=\"text/html;charset=utf-8\">");
+        sb.append("<meta http-equiv=\"Content-Type\" Content=\"text/html;charset=Shift_JIS\">");
 
         sb.append("<title>スケジュール管理</title>");
 

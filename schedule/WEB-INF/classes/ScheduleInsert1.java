@@ -1,6 +1,6 @@
 import java.io.*;
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
 import java.sql.*;
 
 public class ScheduleInsert1 extends HttpServlet{
@@ -8,8 +8,8 @@ public class ScheduleInsert1 extends HttpServlet{
     public void doPost(HttpServletRequest req, HttpServletResponse res)
         throws ServletException, IOException{
 
-        req.setCharacterEncoding("utf-8");
-        res.setContentType("text/html;charset=utf-8");
+        req.setCharacterEncoding("Shift-JIS");
+        res.setContentType("text/html;charset=Shift_Jis");
         PrintWriter out = res.getWriter();
 
         int year;
@@ -136,12 +136,12 @@ public class ScheduleInsert1 extends HttpServlet{
         }
 
         Connection conn = null;
-        String url = "jdbc:mysql://localhost/servletschedule";
-        String user = "scheduleuser";
-        String password = "schedulepass";
+        String url = "mysql-container:3306/servletschedule";
+        String user = "root";
+        String password = "root";
 
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
             conn = DriverManager.getConnection(url, user, password);
 
             String sql = "insert into schedule (userid, scheduledate, starttime, endtime, schedule, schedulememo) values (?, ?, ?, ?, ?, ?)";

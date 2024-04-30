@@ -3,7 +3,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import java.util.Calendar;
 
-public class NewSchedule3 extends HttpServlet{
+public class NewSchedule2 extends HttpServlet{
 
     public void doGet(HttpServletRequest req, HttpServletResponse res)
         throws ServletException, IOException{
@@ -158,7 +158,7 @@ public class NewSchedule3 extends HttpServlet{
 
         sb.append("<div id=\"right\">");
 
-        sb.append("<form method=\"post\" action=\"/schedule/ScheduleInsert\">");
+        sb.append("<form method=\"post\" action=\"\">");
         sb.append("<table>");
         sb.append("<tr>");
 
