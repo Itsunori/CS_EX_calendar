@@ -1,6 +1,6 @@
-[submodule "jajujoDB"]
-	path = jajujoDB
-	url = https://github.com/iammytoo/jajujoDB
 [submodule "frontend/jakoten"]
 	path = frontend/jakoten
 	url = https://github.com/iammytoo/jakoten
+[submodule "db/jajujoDB"]
+	path = db/jajujoDB
+	url = https://github.com/iammytoo/jajujoDB
