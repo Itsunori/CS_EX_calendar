@@ -1,0 +1,4 @@
+createtable user 3 (userID, int) (userName, string) (password, string)
+createtable userCalendar 2 (userID, int) (calendarID, int)
+createtable calendar 1 (calendarID, int)
+createtable event 4 (eventID, int) (calendarID, int) (title, string) (description, string)
