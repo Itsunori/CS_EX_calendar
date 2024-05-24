@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>スケジュール</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+  <div class="container mx-auto mt-8">
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+      <!-- スケジュールタイトルを表示 -->
+      <div class="bg-blue-500 text-white text-center py-2">
+        <h1 class="text-xl font-bold"><%= scheduleTitle %></h1>
+      </div>
+      <!-- イベント編集フォームを表示 -->
+      <div class="p-4">
+        <form action="/saveSchedule" method="post">
+          <div class="mb-4">
+            <label for="event" class="block text-gray-700 text-sm font-bold mb-2">イベント:</label>
+            <input type="text" id="event" name="event" value="<%= event %>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+          </div>
+          <input type="hidden" name="year" value="<%= year %>">
+          <input type="hidden" name="month" value="<%= month %>">
+          <input type="hidden" name="day" value="<%= day %>">
+          <div class="flex items-center justify-between">
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">保存</button>
+          </div>
+        </form>
+      </div>
+      <!-- カレンダーに戻るリンク -->
+      <div class="text-center py-4">
+        <a href="/calendar?year=<%= year %>&month=<%= month %>" class="text-blue-500 hover:underline">カレンダーに戻る</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

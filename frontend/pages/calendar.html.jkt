@@ -55,7 +55,7 @@
         dayCell.className = 'p-2 border border-gray-200 text-center calendar-cell';
         dayCell.textContent = day;
         dayCell.onclick = function() {
-          window.location.href = `/schedule?year=${year}&month=${month}&day=${day}`;
+          window.location.href = `/schedule?year=<%= year %>&month=<%= month %>&day=${day}`;
         };
         calendar.appendChild(dayCell);
       });

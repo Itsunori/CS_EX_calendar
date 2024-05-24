@@ -10,14 +10,8 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.YearMonth;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import com.sun.net.httpserver.HttpExchange;
 
@@ -25,31 +19,22 @@ public class ScheduleHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
 
-        String template = Files.readString( Paths.get("pages/login.html.jkt").toAbsolutePath().normalize(), StandardCharsets.UTF_8);
+        String template = Files.readString( Paths.get("pages/schedule.html.jkt").toAbsolutePath().normalize(), StandardCharsets.UTF_8);
         URI requestUri = exchange.getRequestURI();
         Map<String, String> queryParams = parseQueryParams(requestUri.getRawQuery());        
-        int year, month;
-        if(queryParams.get("year")!=null && queryParams.get("month") != null){
-            year = Integer.parseInt(queryParams.get("year"));
-            month = Integer.parseInt(queryParams.get("month"));
-        } else {
-            LocalDate today = LocalDate.now();
-            year = today.getYear();
-            month = today.getMonthValue();
-        }
+        int year = 2024;
+        int month = 5;
+        int day = 15; 
 
-        YearMonth yearMonth = YearMonth.of(year, month);
-        LocalDate firstOfMonth = yearMonth.atDay(1);
-        DayOfWeek firstDayOfWeek = firstOfMonth.getDayOfWeek();
-        int daysInMonth = yearMonth.lengthOfMonth();
-
-        int firstDayOfMonth = firstDayOfWeek.getValue() % 7;
-
-        List<Integer> daysInMonthList = IntStream.rangeClosed(1, daysInMonth).boxed().collect(Collectors.toList());
+        String scheduleTitle = year + "年" + month + "月" + day + "日のスケジュール";
+        String event = "会議";
 
         Map<String, Object> context = new HashMap<>();
-        context.put("first_day_of_month", firstDayOfMonth);
-        context.put("days_in_month", daysInMonthList);
+        context.put("year", year);
+        context.put("month", month);
+        context.put("day", day);
+        context.put("scheduleTitle", scheduleTitle);
+        context.put("event", event);
 
         Jakoten engine = new Jakoten();
         String result = engine.render(template, context);

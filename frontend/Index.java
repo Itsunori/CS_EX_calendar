@@ -14,10 +14,10 @@ public class Index {
         HttpServer server = HttpServer.create(new InetSocketAddress(3009), 0);
 
         server.createContext("/", new CalendarHandler());
-        server.createContext("/login/", new LoginHandler());
-        server.createContext("/signup/", new SignupHandler());
-        server.createContext("/callback/", new CallbackHandler());
-        server.createContext("/schedule/", new ScheduleHandler());
+        server.createContext("/login", new LoginHandler());
+        server.createContext("/signup", new SignupHandler());
+        server.createContext("/callback", new CallbackHandler());
+        server.createContext("/schedule", new ScheduleHandler());
         server.createContext("/js/", new StaticFileHandler("js/"));
 
         server.setExecutor(null);
