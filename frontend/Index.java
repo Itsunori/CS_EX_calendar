@@ -33,14 +33,6 @@ public class Index {
         }
     }
 
-    static class ScheduleHandler implements HttpHandler {
-        @Override
-        public void handle(HttpExchange exchange) throws IOException {
-            String response = "This is the schedule page";
-            handleResponse(exchange, response);
-        }
-    }
-
     private static void handleResponse(HttpExchange exchange, String response) throws IOException {
         exchange.sendResponseHeaders(200, response.getBytes().length);
         OutputStream os = exchange.getResponseBody();

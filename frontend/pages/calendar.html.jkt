@@ -5,11 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/styles.css">
     <script src="/js/preload.js"></script>
-    <title>Login</title>
+    <title>カレンダー</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+    .calendar-cell {
+      height: 100px;
+      cursor: pointer;
+    }
+  </style>
 </head>
-<body>
-    <h1>カレンダー画面</h1>
-    <%= test %>
-    <script src="/js/index.js"></script>
+<body class="bg-gray-100">
+  <div class="container mx-auto mt-8">
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+      <!-- タイトルを追加 -->
+      <div class="bg-blue-500 text-white text-center py-2">
+        <h1 class="text-xl font-bold"><%= year %>年<%= month %>月のカレンダー</h1>
+      </div>
+      <div class="flex justify-between p-4">
+        <a href="/calendar?year=<%= previousYear %>&month=<%= previousMonth %>" class="text-blue-500 hover:underline">前月</a>
+        <a href="/calendar?year=<%= nextYear %>&month=<%= nextMonth %>" class="text-blue-500 hover:underline">来月</a>
+      </div>
+      <div class="grid grid-cols-7 bg-gray-200 text-gray-700">
+        <div class="p-2 text-center font-semibold">日</div>
+        <div class="p-2 text-center font-semibold">月</div>
+        <div class="p-2 text-center font-semibold">火</div>
+        <div class="p-2 text-center font-semibold">水</div>
+        <div class="p-2 text-center font-semibold">木</div>
+        <div class="p-2 text-center font-semibold">金</div>
+        <div class="p-2 text-center font-semibold">土</div>
+      </div>
+      <div id="calendar" class="grid grid-cols-7"></div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const firstDayOfMonth = <%= first_day_of_month %>;
+      const daysInMonth = <%= days_in_month %>;
+      
+      const calendar = document.getElementById('calendar');
+      
+      for (let i = 0; i < firstDayOfMonth; i++) {
+        const emptyCell = document.createElement('div');
+        emptyCell.className = 'p-2 border border-gray-200 calendar-cell';
+        calendar.appendChild(emptyCell);
+      }
+
+      daysInMonth.forEach(day => {
+        const dayCell = document.createElement('div');
+        dayCell.className = 'p-2 border border-gray-200 text-center calendar-cell';
+        dayCell.textContent = day;
+        dayCell.onclick = function() {
+          window.location.href = `/schedule?year=${year}&month=${month}&day=${day}`;
+        };
+        calendar.appendChild(dayCell);
+      });
+    });
+  </script>
 </body>
 </html>
