@@ -1,5 +1,3 @@
-package backend;
-
 import handlers.*;
 import com.sun.net.httpserver.HttpServer;
 
