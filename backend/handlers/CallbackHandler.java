@@ -10,8 +10,6 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
-import org.json.JSONObject;
-
 public class CallbackHandler implements HttpHandler {
     private static final Cache<String, String> cache = new Cache<>(60, TimeUnit.SECONDS);
 
