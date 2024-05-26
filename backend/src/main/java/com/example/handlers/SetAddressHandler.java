@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
-public class SetTokenHandler extends BaseHandler {
+public class SetAddressHandler extends BaseHandler {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
