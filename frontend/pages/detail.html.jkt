@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>予定詳細</title>
+</head>
+<body class="bg-gray-100 text-gray-900">
+    <div class="container mx-auto mt-8">
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="bg-blue-500 text-white text-center py-2">
+                <h1 class="text-xl font-bold"><%= year %>年<%= month %>月<%= day %>日の予定</h1>
+            </div>
+            
+            <div class="flex justify-center p-4">
+                <a href="/schedule?year=<%= year %>&month=<%= month %>&day=<%= day %>" class="text-blue-500 hover:underline">予定一覧に戻る</a>
+            </div>
+        </div>
+    
+        <div class="container mx-auto py-8">
+            <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                <div class="p-6">
+                    <h2 class="text-2xl font-semibold mb-4">予定詳細</h2>
+                    <form action="/update" method="POST">
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="title">
+                                タイトル
+                            </label>
+                            <input name="title" type="text" value="<%= title %>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="title">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="date">
+                                日付
+                            </label>
+                            <input name="date" type="date" value="<%= event.get("date") %>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="date">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="time">
+                                時間
+                            </label>
+                            <input name="time" type="time" value="<%= event.get("time") %>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="time">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
+                                説明
+                            </label>
+                            <textarea name="description" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="description"><%= description %></textarea>
+                        </div>
+                        <div class="text-center">
+                            <input type="hidden" name="id" value="<%= id %>">
+                            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                                変更
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

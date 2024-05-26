@@ -18,6 +18,7 @@ public class Index {
         server.createContext("/signup", new SignupHandler());
         server.createContext("/callback", new CallbackHandler());
         server.createContext("/schedule", new ScheduleHandler());
+        server.createContext("/detail", new DetailHandler());
         server.createContext("/js/", new StaticFileHandler("js/"));
 
         server.setExecutor(null);

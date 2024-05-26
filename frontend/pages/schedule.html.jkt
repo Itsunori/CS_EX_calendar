@@ -1,38 +1,52 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>スケジュール</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>予定一覧</title>
 </head>
-<body class="bg-gray-100">
-  <div class="container mx-auto mt-8">
-    <div class="bg-white rounded-lg shadow overflow-hidden">
-      <!-- スケジュールタイトルを表示 -->
-      <div class="bg-blue-500 text-white text-center py-2">
-        <h1 class="text-xl font-bold"><%= scheduleTitle %></h1>
-      </div>
-      <!-- イベント編集フォームを表示 -->
-      <div class="p-4">
-        <form action="/saveSchedule" method="post">
-          <div class="mb-4">
-            <label for="event" class="block text-gray-700 text-sm font-bold mb-2">イベント:</label>
-            <input type="text" id="event" name="event" value="<%= event %>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-          </div>
-          <input type="hidden" name="year" value="<%= year %>">
-          <input type="hidden" name="month" value="<%= month %>">
-          <input type="hidden" name="day" value="<%= day %>">
-          <div class="flex items-center justify-between">
-            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">保存</button>
-          </div>
-        </form>
-      </div>
-      <!-- カレンダーに戻るリンク -->
-      <div class="text-center py-4">
-        <a href="/calendar?year=<%= year %>&month=<%= month %>" class="text-blue-500 hover:underline">カレンダーに戻る</a>
-      </div>
+<body class="bg-gray-100 text-gray-900">
+    <div class="container mx-auto mt-8">
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="bg-blue-500 text-white text-center py-2">
+                <h1 class="text-xl font-bold"><%= year %>年<%= month %>月<%= day %>日の予定一覧</h1>
+            </div>
+            
+            <div class="flex justify-between p-4">
+                <a href="/schedule?year=<%= previousYear %>&month=<%= previousMonth %>&day=<%= previousDay %>" class="text-blue-500 hover:underline">＜ 前日</a>
+                <a href="/calendar?year=<%= year %>&month=<%= month %>" class="text-blue-500 hover:underline">カレンダーに戻る</a>
+                <a href="/schedule?year=<%= nextYear %>&month=<%= nextMonth %>&day=<%= nextDay %>" class="text-blue-500 hover:underline">翌日 ＞</a>
+            </div>
+        </div>
+        <div class="container mx-auto py-8">
+            <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                <div class="p-6">
+                    <h2 class="text-2xl font-semibold mb-4">予定一覧</h2>
+                    <div class="space-y-4">
+                        <% for event in events %>
+                            <div class="border p-4 rounded hover:bg-gray-100">
+                                <a href="/detail?id=<%= event.id %>" class="text-lg font-semibold text-blue-600 hover:underline">
+                                    <%= event.title %>
+                                </a>
+                                <div class="text-sm text-gray-600">
+                                    <%= event.date %> - <%= event.time %>
+                                </div>
+                                <div class="text-gray-800">
+                                    <%= event.description %>
+                                </div>
+                            </div>
+                        <% endfor %>
+                        <div class="text-center mb-4">
+                            <a href="/detail?year=<%= year %>&month=<%= month %>" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                                新しい予定を作成
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
+
 </body>
 </html>

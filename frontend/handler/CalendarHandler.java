@@ -25,7 +25,7 @@ public class CalendarHandler implements HttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
 
         String template = Files.readString( Paths.get("pages/calendar.html.jkt").toAbsolutePath().normalize(), StandardCharsets.UTF_8);
-URI requestUri = exchange.getRequestURI();
+        URI requestUri = exchange.getRequestURI();
         Map<String, String> queryParams = parseQueryParams(requestUri.getRawQuery());        
         int year, month;
         if(queryParams.get("year")!=null && queryParams.get("month") != null){

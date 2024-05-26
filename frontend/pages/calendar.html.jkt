@@ -16,7 +16,6 @@
 <body class="bg-gray-100">
   <div class="container mx-auto mt-8">
     <div class="bg-white rounded-lg shadow overflow-hidden">
-      <!-- タイトルを追加 -->
       <div class="bg-blue-500 text-white text-center py-2">
         <h1 class="text-xl font-bold"><%= year %>年<%= month %>月のカレンダー</h1>
       </div>

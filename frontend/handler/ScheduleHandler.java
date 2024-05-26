@@ -10,7 +10,10 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -22,19 +25,62 @@ public class ScheduleHandler implements HttpHandler {
         String template = Files.readString( Paths.get("pages/schedule.html.jkt").toAbsolutePath().normalize(), StandardCharsets.UTF_8);
         URI requestUri = exchange.getRequestURI();
         Map<String, String> queryParams = parseQueryParams(requestUri.getRawQuery());        
-        int year = 2024;
-        int month = 5;
-        int day = 15; 
+        int year, month, day;
+        if(queryParams.get("year")!=null && queryParams.get("month") != null && queryParams.get("day") != null){
+            year = Integer.parseInt(queryParams.get("year"));
+            month = Integer.parseInt(queryParams.get("month"));
+            day = Integer.parseInt(queryParams.get("day"));
+        } else {
+            LocalDate today = LocalDate.now();
+            year = today.getYear();
+            month = today.getMonthValue();
+            day = today.getDayOfMonth();
+        }
+        LocalDate targetDay = LocalDate.of(year, month, day);
+        LocalDate previousLocalDate = targetDay.minusDays(1);
+        LocalDate nextLocalDate = targetDay.plusDays(1);
 
-        String scheduleTitle = year + "年" + month + "月" + day + "日のスケジュール";
-        String event = "会議";
+        List<Map<String, Object>> events = new ArrayList<>();
 
+        Map<String, Object> event1 = new HashMap<>();
+        event1.put("id", "1");
+        event1.put("title", "Meeting with Team");
+        event1.put("description", "Discuss project updates");
+        event1.put("date", "2024-06-01");
+        event1.put("time", "10:00 AM");
+        events.add(event1);
+
+        Map<String, Object> event2 = new HashMap<>();
+        event2.put("id", "2");
+        event2.put("title", "Doctor's Appointment");
+        event2.put("description", "Routine check-up");
+        event2.put("date", "2024-06-02");
+        event2.put("time", "02:00 PM");
+        events.add(event2);
+
+        Map<String, Object> event3 = new HashMap<>();
+        event3.put("id", "3");
+        event3.put("title", "Lunch with Client");
+        event3.put("description", "Discuss contract details");
+        event3.put("date", "2024-06-03");
+        event3.put("time", "12:00 PM");
+        events.add(event3);
+
+        // Mapにデータを詰める
         Map<String, Object> context = new HashMap<>();
-        context.put("year", year);
-        context.put("month", month);
-        context.put("day", day);
-        context.put("scheduleTitle", scheduleTitle);
-        context.put("event", event);
+        context.put("events", events);
+        context.put("year", year );
+        context.put("month", month );
+        context.put("day", day );
+
+        context.put("previousYear", previousLocalDate.getYear());
+        context.put("previousMonth", previousLocalDate.getMonthValue());
+        context.put("previousDay", previousLocalDate.getDayOfMonth());
+
+        context.put("nextYear", nextLocalDate.getYear());
+        context.put("nextMonth", nextLocalDate.getMonthValue());
+        context.put("nextDay", nextLocalDate.getDayOfMonth());
+
 
         Jakoten engine = new Jakoten();
         String result = engine.render(template, context);
