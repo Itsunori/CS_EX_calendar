@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 public class SetAddressHandler extends BaseHandler {
     private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -38,10 +39,20 @@ public class SetAddressHandler extends BaseHandler {
         while ((line = reader.readLine()) != null) {
             requestBody.append(line);
         }
-    
+        
+        // check if the access token is valid and possible to get the email
         RequestObject requestObject = objectMapper.readValue(requestBody.toString(), RequestObject.class);
+        String accessToken = requestObject.getAccessToken();
+        System.out.println("access token: " + accessToken);
+        Optional<String> email = super.getAddress(accessToken);
+        if (!email.isPresent()) {
+            exchange.sendResponseHeaders(401, -1);
+            return;
+        }
 
         // NOTE: DB logic would go here
+            // 1. Check if the email is already in the DB
+            // 2. If not, insert the email into the DB
 
         exchange.getResponseHeaders().set("Content-Type", "application/json; charset=UTF-8");
         exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "http://localhost:3009");

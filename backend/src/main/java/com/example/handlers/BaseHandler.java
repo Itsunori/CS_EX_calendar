@@ -26,9 +26,9 @@ public class BaseHandler implements HttpHandler {
                             "Status: " + statusCode);
     }
 
-    protected Optional<String> getAddress(String accessToken){
+    protected Optional<String> getAddress(String accessToken) {
         try {
-            String url = "https://www.googleapis.com/oauth2/v1/userinfo?alt=json";
+            String url = "https://www.googleapis.com/oauth2/v3/userinfo";
 
             URL obj = new URL(url);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -36,31 +36,27 @@ public class BaseHandler implements HttpHandler {
             con.setRequestProperty("Authorization", "Bearer " + accessToken);
 
             int responseCode = con.getResponseCode();
-            System.out.println("Response Code : " + responseCode);
 
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
                 String inputLine;
-                StringBuffer response = new StringBuffer();
+                StringBuilder response = new StringBuilder();
 
                 while ((inputLine = in.readLine()) != null) {
                     response.append(inputLine);
                 }
                 in.close();
 
-                System.out.println("Response: " + response.toString());
-
                 String jsonResponse = response.toString();
-                String email = jsonResponse.split("\"email\":\"")[1].split("\"")[0];
-                System.out.println("User email: " + email);
+                String email = jsonResponse.split("\"email\": \"")[1].split("\"")[0];
                 return Optional.of(email);
-            } else {
-                System.out.println("GET request not worked");
+            } else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
                 return Optional.empty();
             }
         } catch (Exception e) {
             e.printStackTrace();
             return Optional.empty();
         }
+        return Optional.empty();
     }
 }
