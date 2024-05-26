@@ -20,13 +20,13 @@ async function setAccessToken() {
     setCookie("access_token", token, 1, "/");
 
     try {
-        const response = await fetch('http://localhost:8000/set-token/', {
+        const response = await fetch('http://localhost:8000/set-address/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                access_token: token
+                accessToken: token
             })
         });
 

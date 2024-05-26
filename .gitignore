@@ -1,3 +1,6 @@
 !db/my.cnf
 *.class
 protos/
+
+*.log
+target/

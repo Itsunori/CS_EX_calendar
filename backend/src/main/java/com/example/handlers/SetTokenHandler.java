@@ -1,11 +1,14 @@
-package handlers;
+package com.example.handlers;
 
 import com.sun.net.httpserver.HttpExchange;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 public class SetTokenHandler extends BaseHandler {
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         if ("OPTIONS".equalsIgnoreCase(exchange.getRequestMethod())) {
@@ -35,17 +38,39 @@ public class SetTokenHandler extends BaseHandler {
         while ((line = reader.readLine()) != null) {
             requestBody.append(line);
         }
+    
+        RequestObject requestObject = objectMapper.readValue(requestBody.toString(), RequestObject.class);
 
-        String responseBody = "Token received: " + requestBody.toString();
         // NOTE: DB logic would go here
 
         exchange.getResponseHeaders().set("Content-Type", "application/json; charset=UTF-8");
         exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "http://localhost:3009");
         int statusCode = 200;
         exchange.sendResponseHeaders(statusCode, -1);
+
         super.logRequest(exchange, statusCode);
-        OutputStream os = exchange.getResponseBody();
-        os.write(responseBody.getBytes());
-        os.close();
+    }
+
+    public static class RequestObject {
+        private String accessToken;
+
+        public RequestObject() {}
+
+        public RequestObject(String accessToken) {
+            this.accessToken = accessToken;
+        }
+        
+        public String getAccessToken() {
+            return accessToken;
+        }
+    
+        public void setAccessToken(String accessToken) {
+            this.accessToken = accessToken;
+        }
+
+        @Override
+        public String toString() {
+            return "RequestObject{accessToken='" + accessToken + "'}";
+        }
     }
 }
