@@ -7,10 +7,12 @@ import com.sun.net.httpserver.HttpExchange;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.Socket;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.net.URL;
 
 public class BaseHandler implements HttpHandler {
@@ -118,6 +120,7 @@ public class BaseHandler implements HttpHandler {
             while ((dbLine = in.readLine()) != null) {
                 response.append(dbLine);
             }
+            logDBRequest(query, response.toString());
 
             return response.toString();
         }
@@ -128,6 +131,29 @@ public class BaseHandler implements HttpHandler {
         if (email.isEmpty()) {
             return false;
         }
-        return isUser(email.get());
+        try {
+            return isUser(email.get());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    protected Map<String, String> parseQuery(String query) {
+        return List.of(query.split("&")).stream()
+            .map(param -> param.split("="))
+            .collect(Collectors.toMap(
+                pair -> decode(pair[0]), 
+                pair -> pair.length > 1 ? decode(pair[1]) : ""
+            ));
+    }
+
+    private String decode(String value) {
+        try {
+            return java.net.URLDecoder.decode(value, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 }
