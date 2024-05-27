@@ -10,3 +10,25 @@ docker compose up -d
 ```bash
 bash rehash.sh
 ```
+
+
+## MAVEN
+
+jsonのパースを標準ライブラリだけでやるのはちょっと...ということMAVENを入れました！(気が向いた人はぜひ自作してもらって)
+
+インストールはお願いします🥹
+
+
+いずれのコマンドもCS_EX_calendar/backendで実行してください！
+コンパイル
+```bash
+mvn clean install
+```
+実行(db)
+```
+mvn exec:java -PjajujoDB
+```
+実行(backend)
+```
+mvn exec:java -Pbackend 
+```
