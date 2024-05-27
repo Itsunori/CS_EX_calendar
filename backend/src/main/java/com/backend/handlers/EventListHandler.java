@@ -7,8 +7,11 @@ import com.sun.net.httpserver.HttpExchange;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class EventListHandler extends BaseHandler {
     public EventListHandler(String HOST, int PORT) {
@@ -47,12 +50,30 @@ public class EventListHandler extends BaseHandler {
             exchange.sendResponseHeaders(401, -1);
             return;
         }
-    
-        query = "from event select (eventID,title,startedAt,endedAt,description,owner)";
-        String response = communicateWithDB(query);
 
-        List<Event> events = StringToJsonConverter.parseStringToEventList(response);
-        String responseBody = StringToJsonConverter.convertToJson(events);
+        int year, month, day;
+        if(queryParams.get("year")!=null && queryParams.get("month") != null && queryParams.get("day") != null){
+            year = Integer.parseInt(queryParams.get("year"));
+            month = Integer.parseInt(queryParams.get("month"));
+            day = Integer.parseInt(queryParams.get("day"));
+        } else {
+            LocalDate today = LocalDate.now();
+            year = today.getYear();
+            month = today.getMonthValue();
+            day = today.getDayOfMonth();
+        }
+        LocalDate targetDay = LocalDate.of(year, month, day);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        Optional<String> mail = super.getAddress(accessToken);
+        query = "from event where (owner, =, %s) where (startedAt, >=, %s) where (endedAt, <=, %s) select (eventID,title,startedAt,endedAt,description,owner)".formatted(mail.get(),targetDay.format(formatter)+" 00:00:00", targetDay.format(formatter) + " 23:59:59");
+
+        String response = communicateWithDB(query);
+        System.out.println(response);
+        String responseBody = "[]";
+        if(response.length()>10){
+            List<Event> events = StringToJsonConverter.parseStringToEventList(response);
+            responseBody = StringToJsonConverter.convertToJson(events);
+        }
 
         exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "http://localhost:3009");
         exchange.getResponseHeaders().add("Content-Type", "application/json; charset=UTF-8");

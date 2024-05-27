@@ -54,7 +54,6 @@ public class CalendarHandler implements HttpHandler {
         int nextYear = nextMonthYearMonth.getYear();
         int nextMonth = nextMonthYearMonth.getMonthValue();
 
-        // コンテキストにデータを設定
         Map<String, Object> context = new HashMap<>();
         context.put("year", year);
         context.put("month", month);

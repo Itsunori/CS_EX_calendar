@@ -26,11 +26,11 @@
                     <div class="space-y-4">
                         <% for event in events %>
                             <div class="border p-4 rounded hover:bg-gray-100">
-                                <a href="/detail?id=<%= event.id %>" class="text-lg font-semibold text-blue-600 hover:underline">
+                                <a href="/detail?id=<%= event.eventID %>" class="text-lg font-semibold text-blue-600 hover:underline">
                                     <%= event.title %>
                                 </a>
                                 <div class="text-sm text-gray-600">
-                                    <%= event.date %> - <%= event.time %>
+                                    <%= event.startedAt %> - <%= event.endedAt %>
                                 </div>
                                 <div class="text-gray-800">
                                     <%= event.description %>

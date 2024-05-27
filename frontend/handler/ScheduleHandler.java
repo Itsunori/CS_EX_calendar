@@ -3,10 +3,16 @@ package handler;
 import com.sun.net.httpserver.HttpHandler;
 
 import src.Jakoten;
+import utils.JsonParser;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -21,8 +27,25 @@ import com.sun.net.httpserver.HttpExchange;
 public class ScheduleHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-
+        Map<String, List<String>> headers = exchange.getRequestHeaders();
+        List<String> cookies = headers.get("Cookie");
+        String token = "";
+        if (cookies != null) {
+            Map<String, String> cookieMap = new HashMap<>();
+            for (String cookie : cookies) {
+                String[] cookiePairs = cookie.split(";\\s*");
+                for (String cookiePair : cookiePairs) {
+                    String[] keyValue = cookiePair.split("=", 2);
+                    if (keyValue.length == 2) {
+                        cookieMap.put(keyValue[0], keyValue[1]);
+                    }
+                }
+            }
+            
+            token = cookieMap.get("access_token");
+        }
         String template = Files.readString( Paths.get("pages/schedule.html.jkt").toAbsolutePath().normalize(), StandardCharsets.UTF_8);
+
         URI requestUri = exchange.getRequestURI();
         Map<String, String> queryParams = parseQueryParams(requestUri.getRawQuery());        
         int year, month, day;
@@ -41,33 +64,39 @@ public class ScheduleHandler implements HttpHandler {
         LocalDate nextLocalDate = targetDay.plusDays(1);
 
         List<Map<String, Object>> events = new ArrayList<>();
-
-        Map<String, Object> event1 = new HashMap<>();
-        event1.put("id", "1");
-        event1.put("title", "Meeting with Team");
-        event1.put("description", "Discuss project updates");
-        event1.put("date", "2024-06-01");
-        event1.put("time", "10:00 AM");
-        events.add(event1);
-
-        Map<String, Object> event2 = new HashMap<>();
-        event2.put("id", "2");
-        event2.put("title", "Doctor's Appointment");
-        event2.put("description", "Routine check-up");
-        event2.put("date", "2024-06-02");
-        event2.put("time", "02:00 PM");
-        events.add(event2);
-
-        Map<String, Object> event3 = new HashMap<>();
-        event3.put("id", "3");
-        event3.put("title", "Lunch with Client");
-        event3.put("description", "Discuss contract details");
-        event3.put("date", "2024-06-03");
-        event3.put("time", "12:00 PM");
-        events.add(event3);
-
-        // Mapにデータを詰める
         Map<String, Object> context = new HashMap<>();
+        
+        String baseUrl = "http://localhost:8000/event-list/";
+
+        String query = String.format("accessToken=%s&year=%d&month=%d&day=%d",
+                URLEncoder.encode(token, StandardCharsets.UTF_8.toString()),
+                year, month, day);
+
+        @SuppressWarnings("deprecation")
+        URL url = new URL(baseUrl + "?" + query);
+
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("Accept", "application/json");
+
+        int responseCode = connection.getResponseCode();
+        System.out.println("Response Code : " + responseCode);
+
+        if (responseCode == HttpURLConnection.HTTP_OK) { 
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+            if (response.toString().length()> 10){
+                events = JsonParser.parseJsonArray(response.toString());
+            }
+        } 
+        connection.disconnect();
+
         context.put("events", events);
         context.put("year", year );
         context.put("month", month );
