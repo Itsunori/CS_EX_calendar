@@ -1,8 +1,7 @@
 package com.backend;
 
 import com.sun.net.httpserver.HttpServer;
-import com.backend.handlers.EventListHandler;
-import com.backend.handlers.SetAddressHandler;
+import com.backend.handlers.*;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -38,6 +37,7 @@ public class Backend {
 
         server.createContext("/set-address/", new SetAddressHandler(HOST, PORT));
         server.createContext("/event-list/", new EventListHandler(HOST, PORT));
+        server.createContext("/create-event/", new CreateEventHandler(HOST, PORT));
         server.setExecutor(null); 
         server.start();
         System.out.println("Server started on port 8000");

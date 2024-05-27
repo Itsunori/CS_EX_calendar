@@ -77,7 +77,6 @@ public class BaseHandler implements HttpHandler {
 
     protected Boolean isUser(String email) throws IOException {
         String query = "from user select (mailAddress)";
-        System.out.println(query);
         String response = communicateWithDB(query);
         logDBRequest(query, response);
         List<String> emailList = splitComma(response);

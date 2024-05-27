@@ -31,10 +31,17 @@ function createEvent() {
         description: 'This is a test event.',
         startedAt: '2024/05/01 00:00:00',
         endedAt: '2024/05/01 03:00:00',
+        accessToken: token,
     });
 
     fetch(url, {
         method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: body
     })
     .then(response => console.log(response.ok))
 }
+
+createEvent();
