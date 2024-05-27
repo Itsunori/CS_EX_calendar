@@ -1,16 +1,14 @@
 package com.backend.handlers;
 
+import com.backend.utils.JsonParser;
 import com.sun.net.httpserver.HttpExchange;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.Optional;
-import java.net.Socket;
 
 public class SetAddressHandler extends BaseHandler {
-    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public SetAddressHandler(String HOST, int PORT) {
         super(HOST, PORT);
@@ -45,9 +43,9 @@ public class SetAddressHandler extends BaseHandler {
         while ((line = reader.readLine()) != null) {
             requestBody.append(line);
         }
-        
+
         // check if the access token is valid and possible to get the email
-        RequestObject requestObject = objectMapper.readValue(requestBody.toString(), RequestObject.class);
+        RequestObject requestObject = parseRequestObject(requestBody.toString());
         String accessToken = requestObject.getAccessToken();
         Optional<String> email = super.getAddress(accessToken);
         if (!email.isPresent()) {
@@ -58,7 +56,7 @@ public class SetAddressHandler extends BaseHandler {
         Boolean existUser = isUser(email.get());
         if (!existUser) {
             String query = "upsert user (mailAddress) (" + email.get() + ")";
-            communicateWithDB(accessToken);
+            communicateWithDB(query);
         }
 
         exchange.getResponseHeaders().set("Content-Type", "application/json; charset=UTF-8");
@@ -69,6 +67,11 @@ public class SetAddressHandler extends BaseHandler {
         super.logRequest(exchange, statusCode);
     }
 
+    private RequestObject parseRequestObject(String requestBody) {
+        Map<String, Object>  jsonObject = JsonParser.parseJson(requestBody);
+        return new RequestObject((String)jsonObject.get("accessToken"));
+    }
+
     public static class RequestObject {
         private String accessToken;
 
@@ -77,11 +80,11 @@ public class SetAddressHandler extends BaseHandler {
         public RequestObject(String accessToken) {
             this.accessToken = accessToken;
         }
-        
+
         public String getAccessToken() {
             return accessToken;
         }
-    
+
         public void setAccessToken(String accessToken) {
             this.accessToken = accessToken;
         }

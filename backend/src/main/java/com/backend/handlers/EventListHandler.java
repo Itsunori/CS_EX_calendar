@@ -3,8 +3,6 @@ package com.backend.handlers;
 import com.backend.utils.Event;
 import com.backend.utils.StringToJsonConverter;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -13,8 +11,6 @@ import java.util.List;
 import java.util.Map;
 
 public class EventListHandler extends BaseHandler {
-    private static final ObjectMapper objectMapper = new ObjectMapper();
-
     public EventListHandler(String HOST, int PORT) {
         super(HOST, PORT);
     }

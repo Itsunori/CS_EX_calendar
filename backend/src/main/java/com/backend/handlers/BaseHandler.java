@@ -45,6 +45,7 @@ public class BaseHandler implements HttpHandler {
         try {
             String url = "https://www.googleapis.com/oauth2/v3/userinfo";
 
+            @SuppressWarnings("deprecation")
             URL obj = new URL(url);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
             con.setRequestMethod("GET");

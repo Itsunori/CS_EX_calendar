@@ -3,8 +3,6 @@ package com.backend.handlers;
 import com.backend.utils.Event;
 import com.backend.utils.StringToJsonConverter;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.io.OutputStream;

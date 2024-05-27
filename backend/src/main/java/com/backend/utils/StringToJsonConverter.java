@@ -1,6 +1,5 @@
 package com.backend.utils;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +22,30 @@ public class StringToJsonConverter {
         return events;
     }
 
-    public static String convertToJson(List<Event> events) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(events);
+    public static String convertToJson(List<Event> events) {
+        StringBuilder jsonArray = new StringBuilder();
+        jsonArray.append("[");
+
+        for (int i = 0; i < events.size(); i++) {
+            Event event = events.get(i);
+            StringBuilder jsonObject = new StringBuilder();
+            jsonObject.append("{");
+            jsonObject.append("\"eventID\":").append(event.getEventID()).append(",");
+            jsonObject.append("\"title\":\"").append(event.getTitle()).append("\",");
+            jsonObject.append("\"startedAt\":\"").append(event.getStartedAt()).append("\",");
+            jsonObject.append("\"endedAt\":\"").append(event.getEndedAt()).append("\",");
+            jsonObject.append("\"description\":\"").append(event.getDescription()).append("\",");
+            jsonObject.append("\"owner\":\"").append(event.getOwner()).append("\"");
+            jsonObject.append("}");
+
+            jsonArray.append(jsonObject);
+
+            if (i < events.size() - 1) {
+                jsonArray.append(",");
+            }
+        }
+
+        jsonArray.append("]");
+        return jsonArray.toString();
     }
 }

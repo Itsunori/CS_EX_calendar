@@ -2,17 +2,13 @@ package com.backend.handlers;
 
 import com.sun.net.httpserver.HttpExchange;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.Optional;
-import java.util.Random;
-import java.net.Socket;
+import java.util.Map;
+
+import com.backend.utils.JsonParser;
 
 public class DeleteEventHandler extends BaseHandler {
-    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public DeleteEventHandler(String HOST, int PORT) {
         super(HOST, PORT);
@@ -52,14 +48,14 @@ public class DeleteEventHandler extends BaseHandler {
             requestBody.append(line);
         }
         try {
-            RequestObject requestObject = objectMapper.readValue(requestBody.toString(), RequestObject.class);
+            RequestObject requestObject = parseRequestObject(requestBody.toString());
             String accessToken = requestObject.getAccessToken();
             if (!isAuthorized(accessToken)) {
                 exchange.sendResponseHeaders(401, -1);
                 return;
             }
 
-            String email = super.getAddress(accessToken).get();
+            super.getAddress(accessToken).get();
 
             String query = "delete event (eventID) (" + requestObject.getEventID() + ")";
             communicateWithDB(query);
@@ -73,36 +69,41 @@ public class DeleteEventHandler extends BaseHandler {
         }
     }
 
+    private RequestObject parseRequestObject(String requestBody) {
+        Map<String, Object>  jsonObject = JsonParser.parseJson(requestBody);
+        return new RequestObject(
+                (String) jsonObject.get("accessToken"),
+                (String) jsonObject.get("eventID")
+        );
+    }
+
     public static class RequestObject {
-        @JsonProperty("accessToken")
         private String accessToken;
-    
-        @JsonProperty("eventID")
         private String eventID;
-    
+
         public RequestObject() {}
-    
+
         public RequestObject(String accessToken, String eventID) {
             this.accessToken = accessToken;
             this.eventID = eventID;
         }
-    
+
         public String getAccessToken() {
             return accessToken;
         }
-    
+
         public void setAccessToken(String accessToken) {
             this.accessToken = accessToken;
         }
-    
+
         public String getEventID() {
             return eventID;
         }
-    
+
         public void setEventID(String eventID) {
             this.eventID = eventID;
         }
-    
+
         @Override
         public String toString() {
             return "RequestObject{" +

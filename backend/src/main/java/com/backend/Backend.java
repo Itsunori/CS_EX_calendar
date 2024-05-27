@@ -16,7 +16,7 @@ public class Backend {
     private static final String HOST = "localhost";
     private static final int PORT = 3366;
     public static void main(String[] args) throws IOException {
-        String filePath = "./src/main/java/com/db/init.jjj";
+        String filePath = "./com/db/init.jjj";
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))){
             String line;

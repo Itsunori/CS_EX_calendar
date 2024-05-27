@@ -1,23 +1,11 @@
 package com.backend.utils;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Event {
-    @JsonProperty("eventID")
     private int eventID;
-
-    @JsonProperty("title")
     private String title;
-
-    @JsonProperty("startedAt")
     private String startedAt;
-
-    @JsonProperty("endedAt")
     private String endedAt;
-
-    @JsonProperty("description")
     private String description;
-
-    @JsonProperty("owner")
     private String owner;
 
     // Getters and Setters

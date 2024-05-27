@@ -2,17 +2,15 @@ package com.backend.handlers;
 
 import com.sun.net.httpserver.HttpExchange;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.Optional;
-import java.net.Socket;
 import java.util.Random;
+import java.util.Map;
+
+import com.backend.utils.JsonParser;
 
 public class CreateEventHandler extends BaseHandler {
-    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public CreateEventHandler(String HOST, int PORT) {
         super(HOST, PORT);
@@ -49,7 +47,7 @@ public class CreateEventHandler extends BaseHandler {
         }
         System.out.println(requestBody.toString());
     
-        RequestObject requestObject = objectMapper.readValue(requestBody.toString(), RequestObject.class);
+        RequestObject requestObject = parseRequestObject(requestBody.toString());
         String accessToken = requestObject.getAccessToken();
         System.out.println(accessToken);
         if (!isAuthorized(accessToken)) {
@@ -68,7 +66,7 @@ public class CreateEventHandler extends BaseHandler {
             requestObject.getEndedAt() + "," + 
             requestObject.getDescription() + "," + 
             email + ")";
-        String response = communicateWithDB(query);
+        communicateWithDB(query);
 
         exchange.getResponseHeaders().set("Content-Type", "application/json; charset=UTF-8");
         exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "http://localhost:3009");
@@ -78,24 +76,26 @@ public class CreateEventHandler extends BaseHandler {
         super.logRequest(exchange, statusCode);
     }
 
+    private RequestObject parseRequestObject(String requestBody) {
+        Map<String, Object>  jsonObject = JsonParser.parseJson(requestBody);
+        return new RequestObject(
+                (String)jsonObject.get("accessToken"),
+                (String)jsonObject.get("description"),
+                (String)jsonObject.get("endedAt"),
+                (String)jsonObject.get("startedAt"),
+                (String)jsonObject.get("title")
+        );
+    }
+
     public static class RequestObject {
-        @JsonProperty("accessToken")
         private String accessToken;
-    
-        @JsonProperty("description")
         private String description;
-    
-        @JsonProperty("endedAt")
         private String endedAt;
-    
-        @JsonProperty("startedAt")
         private String startedAt;
-    
-        @JsonProperty("title")
         private String title;
-    
+
         public RequestObject() {}
-    
+
         public RequestObject(String accessToken, String description, String endedAt, String startedAt, String title) {
             this.accessToken = accessToken;
             this.description = description;
@@ -103,47 +103,47 @@ public class CreateEventHandler extends BaseHandler {
             this.startedAt = startedAt;
             this.title = title;
         }
-    
+
         public String getAccessToken() {
             return accessToken;
         }
-    
+
         public void setAccessToken(String accessToken) {
             this.accessToken = accessToken;
         }
-    
+
         public String getDescription() {
             return description;
         }
-    
+
         public void setDescription(String description) {
             this.description = description;
         }
-    
+
         public String getEndedAt() {
             return endedAt;
         }
-    
+
         public void setEndedAt(String endedAt) {
             this.endedAt = endedAt;
         }
-    
+
         public String getStartedAt() {
             return startedAt;
         }
-    
+
         public void setStartedAt(String startedAt) {
             this.startedAt = startedAt;
         }
-    
+
         public String getTitle() {
             return title;
         }
-    
+
         public void setTitle(String title) {
             this.title = title;
         }
-    
+
         @Override
         public String toString() {
             return "RequestObject{" +
