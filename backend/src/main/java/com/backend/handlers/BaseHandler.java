@@ -1,14 +1,27 @@
-package com.example.handlers;
+package com.backend.handlers;
 
 import com.sun.net.httpserver.HttpHandler;
+
 import com.sun.net.httpserver.HttpExchange;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.Socket;
 import java.util.Optional;
 import java.net.URL;
 
 public class BaseHandler implements HttpHandler {
+    private final String HOST;
+    private final int PORT;
+
+    public BaseHandler(String HOST, int PORT) {
+        this.HOST = HOST;
+        this.PORT = PORT;
+    }
+
     @Override
     public void handle(HttpExchange exchange) throws IOException{
     }
@@ -58,5 +71,63 @@ public class BaseHandler implements HttpHandler {
             return Optional.empty();
         }
         return Optional.empty();
+    }
+
+    protected Boolean isUser(String email) throws IOException {
+        String query = "from user select (mailAddress)";
+        System.out.println(query);
+        String response = communicateWithDB(query);
+        logDBRequest(query, response);
+        List<String> emailList = splitComma(response);
+        for (String element : emailList) {
+            if (element.equals(email)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private List<String> splitComma(String strings){
+        String[] emailList = strings.split(",");
+        List<String> resultList = new ArrayList<>();
+
+        for (String element : emailList) {
+            element = element.trim();
+            if (!element.isEmpty()) {
+                resultList.add(element);
+            }
+        }
+
+        return resultList;
+    }
+
+    protected void logDBRequest(String command, String response) {
+        Date requestTime = new Date();
+        System.out.println("[" + requestTime + "] Command: " + command + " Response: " + response);
+    }
+
+    protected String communicateWithDB(String query) throws IOException {
+        try (Socket dbSocket = new Socket(HOST, PORT);
+            PrintWriter out = new PrintWriter(dbSocket.getOutputStream(), true);
+            BufferedReader in = new BufferedReader(new InputStreamReader(dbSocket.getInputStream()))) {
+
+            out.println(query);
+
+            StringBuilder response = new StringBuilder();
+            String dbLine;
+            while ((dbLine = in.readLine()) != null) {
+                response.append(dbLine);
+            }
+
+            return response.toString();
+        }
+    }
+
+    protected boolean isAuthorized(String accessToken) {
+        Optional<String> email = getAddress(accessToken);
+        if (email.isEmpty()) {
+            return false;
+        }
+        return isUser(email.get());
     }
 }
