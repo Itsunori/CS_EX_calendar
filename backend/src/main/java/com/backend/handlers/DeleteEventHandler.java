@@ -11,10 +11,10 @@ import java.util.Optional;
 import java.util.Random;
 import java.net.Socket;
 
-public class EditEventHandler extends BaseHandler {
+public class DeleteEventHandler extends BaseHandler {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    public EditEventHandler(String HOST, int PORT) {
+    public DeleteEventHandler(String HOST, int PORT) {
         super(HOST, PORT);
     }
 
@@ -51,59 +51,40 @@ public class EditEventHandler extends BaseHandler {
         while ((line = reader.readLine()) != null) {
             requestBody.append(line);
         }
-        RequestObject requestObject = objectMapper.readValue(requestBody.toString(), RequestObject.class);
-        String accessToken = requestObject.getAccessToken();
-        if (!isAuthorized(accessToken)) {
-            exchange.sendResponseHeaders(401, -1);
-            return;
+        try {
+            RequestObject requestObject = objectMapper.readValue(requestBody.toString(), RequestObject.class);
+            String accessToken = requestObject.getAccessToken();
+            if (!isAuthorized(accessToken)) {
+                exchange.sendResponseHeaders(401, -1);
+                return;
+            }
+
+            String email = super.getAddress(accessToken).get();
+
+            String query = "delete event (eventID) (" + requestObject.getEventID() + ")";
+            communicateWithDB(query);
+            
+            exchange.sendResponseHeaders(200, -1);
+            super.logRequest(exchange, 200);
+        } catch (Exception e) {
+            e.printStackTrace();
+            exchange.sendResponseHeaders(400, -1);
+            super.logRequest(exchange, 400);
         }
-
-        String email = super.getAddress(accessToken).get();
-
-        String query = "delete event (eventID) (" + requestObject.getEventID() + ")";
-        communicateWithDB(query);
-        
-        query = "upsert event (eventID,title,startedAt,endedAt,description,owner) (" + 
-            requestObject.getEventID() + "," +
-            requestObject.getTitle() + "," + 
-            requestObject.getStartedAt() + "," + 
-            requestObject.getEndedAt() + "," + 
-            requestObject.getDescription() + "," + 
-            email + ")";
-        communicateWithDB(query);
-        
-        exchange.sendResponseHeaders(200, -1);
-        super.logRequest(exchange, 200);
     }
 
     public static class RequestObject {
         @JsonProperty("accessToken")
         private String accessToken;
     
-        @JsonProperty("description")
-        private String description;
-
         @JsonProperty("eventID")
         private String eventID;
     
-        @JsonProperty("endedAt")
-        private String endedAt;
-    
-        @JsonProperty("startedAt")
-        private String startedAt;
-    
-        @JsonProperty("title")
-        private String title;
-    
         public RequestObject() {}
     
-        public RequestObject(String accessToken, String description, String eventID,String endedAt, String startedAt, String title) {
+        public RequestObject(String accessToken, String eventID) {
             this.accessToken = accessToken;
-            this.description = description;
             this.eventID = eventID;
-            this.endedAt = endedAt;
-            this.startedAt = startedAt;
-            this.title = title;
         }
     
         public String getAccessToken() {
@@ -114,14 +95,6 @@ public class EditEventHandler extends BaseHandler {
             this.accessToken = accessToken;
         }
     
-        public String getDescription() {
-            return description;
-        }
-    
-        public void setDescription(String description) {
-            this.description = description;
-        }
-
         public String getEventID() {
             return eventID;
         }
@@ -130,39 +103,11 @@ public class EditEventHandler extends BaseHandler {
             this.eventID = eventID;
         }
     
-        public String getEndedAt() {
-            return endedAt;
-        }
-    
-        public void setEndedAt(String endedAt) {
-            this.endedAt = endedAt;
-        }
-    
-        public String getStartedAt() {
-            return startedAt;
-        }
-    
-        public void setStartedAt(String startedAt) {
-            this.startedAt = startedAt;
-        }
-    
-        public String getTitle() {
-            return title;
-        }
-    
-        public void setTitle(String title) {
-            this.title = title;
-        }
-    
         @Override
         public String toString() {
             return "RequestObject{" +
                     "accessToken='" + accessToken + '\'' +
-                    ", description='" + description + '\'' +
                     ", eventID='" + eventID + '\'' +
-                    ", endedAt='" + endedAt + '\'' +
-                    ", startedAt='" + startedAt + '\'' +
-                    ", title='" + title + '\'' +
                     '}';
         }
     }

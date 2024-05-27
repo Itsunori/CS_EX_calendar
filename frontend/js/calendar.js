@@ -18,7 +18,7 @@ window.onload = function() {
         method: 'GET',
     })
     .then(response => response.json())
-    .then(data => console.log(data))
+    .then(data => console.log("event list: " + data))
     .catch(error => console.error('Error:', error));
 }
 
@@ -41,7 +41,7 @@ function createEvent() {
         },
         body: body
     })
-    .then(response => console.log(response.ok))
+    .then(response => console.log("create event: " + response.ok))
 }
 
 createEvent();
@@ -57,7 +57,7 @@ function eventDetail() {
         method: 'GET',
     })
     .then(response => response.json())
-    .then(data => console.log(data))
+    .then(data => console.log("event detail: " + data))
     .catch(error => console.error('Error:', error));
 }
 
@@ -66,7 +66,6 @@ eventDetail();
 function editEvent() {
     const token = getCookie('access_token');
     const url = new URL('http://localhost:8000/edit-event/');
-    url.searchParams.append('accessToken', token);
     const body = JSON.stringify({
         title: 'Test Event',
         eventID: '1234',
@@ -83,7 +82,28 @@ function editEvent() {
         },
         body: body
     })
-    .then(response => console.log(response.ok))
+    .then(response => console.log("edit event: " + response.ok))
 }
 
 editEvent();
+
+function deleteEvent() {
+    const token = getCookie('access_token');
+    const eventID = "1235"
+    const url = new URL('http://localhost:8000/delete-event/');
+    const body = JSON.stringify({
+        eventID: '1235',
+        accessToken: token,
+    });
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: body
+    })
+    .then(response => console.log("delete event: " + response.ok))
+}
+
+deleteEvent();
