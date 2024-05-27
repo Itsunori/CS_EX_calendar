@@ -1,2 +1,5 @@
 createtable event 6 (eventID,int) (title,string) (startedAt,datetime) (endedAt,datetime) (description,string) (owner,string)
 createtable user 1 (mailAddress,string)
+upsert user (mailAddress) (ittsu120219@gmail.com)
+upsert event (eventID,title,startedAt,endedAt,description,owner) (1234,タイトル,2024/05/10 00:00:00,2024/05/10 03:00:00,あ,ittsu120219@gmail.com)
+upsert event (eventID,title,startedAt,endedAt,description,owner) (1235,タイトル,2024/05/10 00:00:00,2024/05/10 03:00:00,あ,ittsu120219@gmail.com)

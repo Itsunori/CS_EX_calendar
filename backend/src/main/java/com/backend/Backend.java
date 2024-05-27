@@ -38,6 +38,7 @@ public class Backend {
         server.createContext("/set-address/", new SetAddressHandler(HOST, PORT));
         server.createContext("/event-list/", new EventListHandler(HOST, PORT));
         server.createContext("/create-event/", new CreateEventHandler(HOST, PORT));
+        server.createContext("/event-detail/", new EventDetailHandler(HOST, PORT));
         server.setExecutor(null); 
         server.start();
         System.out.println("Server started on port 8000");

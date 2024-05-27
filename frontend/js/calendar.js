@@ -45,3 +45,20 @@ function createEvent() {
 }
 
 createEvent();
+
+function eventDetail() {
+    const token = getCookie('access_token');
+    const eventID = "1234"
+    const url = new URL('http://localhost:8000/event-detail/');
+    url.searchParams.append('accessToken', token);
+    url.searchParams.append('eventID', eventID);
+
+    fetch(url, {
+        method: 'GET',
+    })
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(error => console.error('Error:', error));
+}
+
+eventDetail();
