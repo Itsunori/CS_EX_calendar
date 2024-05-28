@@ -26,7 +26,7 @@
                     <div class="space-y-4">
                         <% for event in events %>
                             <div class="border p-4 rounded hover:bg-gray-100">
-                                <a href="/detail?id=<%= event.eventID %>" class="text-lg font-semibold text-blue-600 hover:underline">
+                                <a href="/detail?id=<%= event.eventID %>&year=<%= year %>&month=<%= month %>&day=<%= day %>" class="text-lg font-semibold text-blue-600 hover:underline">
                                     <%= event.title %>
                                 </a>
                                 <div class="text-sm text-gray-600">
@@ -38,7 +38,7 @@
                             </div>
                         <% endfor %>
                         <div class="text-center mb-4">
-                            <a href="/detail?year=<%= year %>&month=<%= month %>" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                            <a href="/detail?year=<%= year %>&month=<%= month %>&day=<%= day %>" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
                                 新しい予定を作成
                             </a>
                         </div>

@@ -27,23 +27,7 @@ import com.sun.net.httpserver.HttpExchange;
 public class ScheduleHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        Map<String, List<String>> headers = exchange.getRequestHeaders();
-        List<String> cookies = headers.get("Cookie");
-        String token = "";
-        if (cookies != null) {
-            Map<String, String> cookieMap = new HashMap<>();
-            for (String cookie : cookies) {
-                String[] cookiePairs = cookie.split(";\\s*");
-                for (String cookiePair : cookiePairs) {
-                    String[] keyValue = cookiePair.split("=", 2);
-                    if (keyValue.length == 2) {
-                        cookieMap.put(keyValue[0], keyValue[1]);
-                    }
-                }
-            }
-            
-            token = cookieMap.get("access_token");
-        }
+        String token = getCookie(exchange);
         String template = Files.readString( Paths.get("pages/schedule.html.jkt").toAbsolutePath().normalize(), StandardCharsets.UTF_8);
 
         URI requestUri = exchange.getRequestURI();
@@ -130,6 +114,27 @@ public class ScheduleHandler implements HttpHandler {
             }
         }
         return queryParams;
+    }
+
+    private String getCookie(HttpExchange exchange ){
+        Map<String, List<String>> headers = exchange.getRequestHeaders();
+        List<String> cookies = headers.get("Cookie");
+        String token = "";
+        if (cookies != null) {
+            Map<String, String> cookieMap = new HashMap<>();
+            for (String cookie : cookies) {
+                String[] cookiePairs = cookie.split(";\\s*");
+                for (String cookiePair : cookiePairs) {
+                    String[] keyValue = cookiePair.split("=", 2);
+                    if (keyValue.length == 2) {
+                        cookieMap.put(keyValue[0], keyValue[1]);
+                    }
+                }
+            }
+            
+            token = cookieMap.get("access_token");
+        }
+        return token;
     }
 
     private static void handleResponse(HttpExchange exchange, String response) throws IOException {

@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <% if isEdit %>
+        <script src="../js/editSchedule.js"></script>
+    <% endif %>
+    <% if isCreate %>
+        <script src="../js/createSchedule.js"></script>
+    <% endif %>
     <title>予定詳細</title>
 </head>
 <body class="bg-gray-100 text-gray-900">
@@ -14,7 +20,7 @@
             </div>
             
             <div class="flex justify-center p-4">
-                <a href="/schedule?year=<%= year %>&month=<%= month %>&day=<%= day %>" class="text-blue-500 hover:underline">予定一覧に戻る</a>
+                <a id="schedule-link" href="/schedule?year=<%= year %>&month=<%= month %>&day=<%= day %>" class="text-blue-500 hover:underline">予定一覧に戻る</a>
             </div>
         </div>
     
@@ -22,7 +28,7 @@
             <div class="bg-white shadow-md rounded-lg overflow-hidden">
                 <div class="p-6">
                     <h2 class="text-2xl font-semibold mb-4">予定詳細</h2>
-                    <form action="/update" method="POST">
+                    <form onsubmit="sendEvent(event)">
                         <div class="mb-4">
                             <label class="block text-gray-700 text-sm font-bold mb-2" for="title">
                                 タイトル
@@ -30,16 +36,16 @@
                             <input name="title" type="text" value="<%= title %>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="title">
                         </div>
                         <div class="mb-4">
-                            <label class="block text-gray-700 text-sm font-bold mb-2" for="date">
-                                日付
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="start_datetime">
+                                開始日時
                             </label>
-                            <input name="date" type="date" value="<%= event.get("date") %>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="date">
+                            <input name="start_datetime" type="datetime-local" value="<%= startedAt %>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="start_datetime">
                         </div>
                         <div class="mb-4">
-                            <label class="block text-gray-700 text-sm font-bold mb-2" for="time">
-                                時間
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="end_datetime">
+                                終了日時
                             </label>
-                            <input name="time" type="time" value="<%= event.get("time") %>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="time">
+                            <input name="end_datetime" type="datetime-local" value="<%= endedAt %>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="end_datetime">
                         </div>
                         <div class="mb-4">
                             <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
@@ -48,7 +54,7 @@
                             <textarea name="description" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="description"><%= description %></textarea>
                         </div>
                         <div class="text-center">
-                            <input type="hidden" name="id" value="<%= id %>">
+                            <input type="hidden" name="id" value="<%= eventID %>">
                             <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
                                 変更
                             </button>
