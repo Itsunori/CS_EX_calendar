@@ -2,5 +2,5 @@
 	path = frontend/jakoten
 	url = https://github.com/iammytoo/jakoten
 [submodule "db/jajujoDB"]
-	path = backend/src/main/java/com/db/jajujoDB
+	path = backend/com/db/jajujoDB
 	url = https://github.com/iammytoo/jajujoDB
