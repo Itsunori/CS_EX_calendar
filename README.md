@@ -1,7 +1,11 @@
 ## 使い方
+clone
+```
+git clone --recursive git@github.com:Itsunori/CS_EX_calendar.git
+```
 実行(db)
 ```
-cd backend
+cd backend/com/db/jajujoDBcd 
 javac jajujoDB/JajujoDB.java
 java jajujoDB/JajujoDB
 ```
