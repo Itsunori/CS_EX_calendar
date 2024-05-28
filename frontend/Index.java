@@ -13,7 +13,7 @@ public class Index {
     public static void main(String[] args) throws IOException {
         HttpServer server = HttpServer.create(new InetSocketAddress(3009), 0);
 
-        server.createContext("/", new CalendarHandler());
+        server.createContext("/", new LoginHandler());
         server.createContext("/login", new LoginHandler());
         server.createContext("/signup", new SignupHandler());
         server.createContext("/callback", new CallbackHandler());
