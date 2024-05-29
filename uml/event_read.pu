@@ -1,0 +1,33 @@
+@startuml
+actor User as User
+participant FrontEnd as Front
+participant BackEnd as Back
+database DB as DB
+participant ResourceServer as RServer
+
+User -[#orange]> Front: イベントの追加/編集/削除申請
+Front -[#orange]> Back: [POST] /{create, edit, delete}-event: イベントの追加/編集/削除
+Back -> RServer: ユーザー情報の取得
+alt "メールアドレスが取得できなかった場合(token expired)" 
+    RServer -> Back: 401 Unauthorized
+    Back -> Front: 401 Unauthorized
+    Front -> Front: ログイン画面遷移
+    Front -> User: ログイン画面表示[ログインのフローへ]
+
+else "メールアドレスが取得できた場合"
+    RServer -> Back: メールアドレス
+    Back -> DB: ユーザ一覧の取得
+    Back -> Back: ユーザ一覧の中からメールアド レスが一致するユーザを取得
+    alt "一致するユーザが存在しない場合"
+        Back -> Front: 401 Unauthorized
+        Front -> Front: ログイン画面遷移
+        Front -> User: ログイン画面表示[ログインのフローへ]
+
+    else "一致するユーザが存在する場合"
+        Back -[#orange]> DB: イベントの追加/編集/削除指示
+        DB -[#orange]> Back: イベントの追加/編集/削除
+        Back -[#orange]> Front: 200 CUD追加/編集/削除結果
+        Front -[#orange]> User: 200 CUD追加/編集/削除結果
+    end
+end
+@enduml

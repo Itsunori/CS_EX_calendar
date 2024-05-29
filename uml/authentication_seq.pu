@@ -1,0 +1,32 @@
+@startuml
+actor User as User
+participant FrontEnd as Front
+participant BackEnd as Back
+database DB as DB
+participant ResourceServer as RServer
+
+User -> Front: リクエスト申請
+Front -> Back: リクエスト
+Back -> RServer: ユーザー情報の取得
+alt "メールアドレスが取得できなかった場合(token expired)" 
+    RServer -> Back: 401 Unauthorized
+    Back -> Front: 401 Unauthorized
+    Front -> Front: ログイン画面遷移
+    Front -> User: ログイン画面表示[ログインのフローへ]
+
+else "メールアドレスが取得できた場合"
+    RServer -> Back: メールアドレス
+    Back -> DB: ユーザ一覧の取得
+    Back -> Back: ユーザ一覧の中からメールアド レスが一致するユーザを取得
+    alt "一致するユーザが存在しない場合"
+        Back -> Front: 401 Unauthorized
+        Front -> Front: ログイン画面遷移
+        Front -> User: ログイン画面表示[ログインのフローへ]
+
+    else "一致するユーザが存在する場合"
+        note over Back
+            認証完了
+        end note
+    end
+end
+@enduml

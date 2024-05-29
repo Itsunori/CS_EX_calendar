@@ -1,0 +1,14 @@
+@startuml
+actor User as User
+participant CalendarApp as App
+participant AuthorizationServer as AuthServer
+participant ResourceServer as RServer
+
+User -> App: ログイン
+App -> AuthServer: 認可リクエスト
+AuthServer -> User: 認可画面表示
+User -> AuthServer: 認可
+AuthServer -> App: アクセストークン・リフレッシュトークン
+App -> RServer: アクセストークン
+RServer -> App: ユーザー情報
+@enduml

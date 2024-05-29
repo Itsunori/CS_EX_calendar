@@ -1,0 +1,15 @@
+@startuml
+(*) --> "Resource Serverにaccess tokenを送信"
+
+if "メールアドレスの取得" then
+  -->[成功] if "既存のユーザのメールアドレスか確認" then
+    -->[既存ユーザ] "認証成功"
+    --> (*)
+  else
+    -->[新規ユーザ] "ユーザをDBに登録"
+    --> (*)
+  endif
+else
+  -->[失敗] "access tokenが失効しているので，新たなtokenの取得へ"
+  --> "認可(login)フローへ"
+@enduml

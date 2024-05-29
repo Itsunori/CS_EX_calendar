@@ -1,0 +1,6 @@
+@startuml
+(*) --> "Authorization Serverに認可リクエスト"
+"Authorization Serverに認可リクエスト" --> "Resource Ownerが認可"
+"Resource Ownerが認可" --> "Authorization Serverがaccess tokenとrefresh tokenを発行"
+"Authorization Serverがaccess tokenとrefresh tokenを発行" --> (*)
+@enduml

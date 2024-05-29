@@ -4,3 +4,5 @@ protos/
 
 *.log
 target/
+
+out/
