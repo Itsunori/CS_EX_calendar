@@ -28,7 +28,7 @@ public class EventDetailHandler extends BaseHandler {
     }
 
     private void handleOptionsRequest(HttpExchange exchange) throws IOException {
-        exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "http://localhost:3009");
+        exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
         exchange.getResponseHeaders().add("Access-Control-Allow-Methods", " GET, OPTIONS");
         exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type");
         int statusCode = 204;
@@ -56,7 +56,7 @@ public class EventDetailHandler extends BaseHandler {
             List<Event> events = StringToJsonConverter.parseStringToEventList(response);
             String responseBody = StringToJsonConverter.convertToJson(events);
 
-            exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "http://localhost:3009");
+            exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
             exchange.getResponseHeaders().add("Content-Type", "application/json; charset=UTF-8");
             exchange.sendResponseHeaders(200, responseBody.getBytes().length);
             OutputStream os = exchange.getResponseBody();

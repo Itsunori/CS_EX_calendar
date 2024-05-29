@@ -11,7 +11,15 @@ import handler.*;
 
 public class Index {
     public static void main(String[] args) throws IOException {
-        HttpServer server = HttpServer.create(new InetSocketAddress(3009), 0);
+        int port = 3009; 
+        if (args.length > 0) {
+            try {
+                port = Integer.parseInt(args[0]);
+            } catch (NumberFormatException e) {
+                System.err.println("Invalid Port");
+            }
+        }
+        HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
 
         server.createContext("/", new LoginHandler());
         server.createContext("/login", new LoginHandler());
@@ -24,7 +32,7 @@ public class Index {
 
         server.setExecutor(null);
         server.start();
-        System.out.println("Server is listening on port 3009");
+        System.out.println("Server is listening on port "+port);
     }
 
     static class SignupHandler implements HttpHandler {

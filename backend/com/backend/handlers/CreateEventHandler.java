@@ -29,7 +29,7 @@ public class CreateEventHandler extends BaseHandler {
     }
 
     private void handleOptionsRequest(HttpExchange exchange) throws IOException {
-        exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "http://localhost:3009");
+        exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
         exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "POST, OPTIONS");
         exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type");
         int statusCode = 204;
@@ -69,7 +69,7 @@ public class CreateEventHandler extends BaseHandler {
         communicateWithDB(query);
 
         exchange.getResponseHeaders().set("Content-Type", "application/json; charset=UTF-8");
-        exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "http://localhost:3009");
+        exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
         int statusCode = 200;
         exchange.sendResponseHeaders(statusCode, -1);
 

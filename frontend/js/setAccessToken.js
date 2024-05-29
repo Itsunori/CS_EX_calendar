@@ -17,7 +17,7 @@ async function setAccessToken() {
     const params = new URLSearchParams(hash);
     const token = params.get('access_token');
 
-    setCookie("access_token", token, 1, "/calendar");
+    setCookie("access_token", token, 1, "/");
 
     try {
         const response = await fetch('http://localhost:8000/set-address/', {
@@ -29,14 +29,14 @@ async function setAccessToken() {
                 accessToken: token
             })
         });
-
+        
         if (response.ok) {
-            window.location.replace("http://localhost:3009/calendar");
+            window.location.replace(`http://${location.host}/calendar`);
         } else {
-            window.location.replace("http://localhost:3009/login/");
+            window.location.replace(`http://${location.host}/login/`);
         }
     } catch (error) {
-        window.location.replace("http://localhost:3009/login");
+        window.location.replace(`http://${location.host}/login`);
     }
 }
 

@@ -31,7 +31,7 @@ public class EventListHandler extends BaseHandler {
     }
 
     private void handleOptionsRequest(HttpExchange exchange) throws IOException {
-        exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "http://localhost:3009");
+        exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
         exchange.getResponseHeaders().add("Access-Control-Allow-Methods", " GET, OPTIONS");
         exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type");
         int statusCode = 204;
@@ -65,7 +65,7 @@ public class EventListHandler extends BaseHandler {
         LocalDate targetDay = LocalDate.of(year, month, day);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         Optional<String> mail = super.getAddress(accessToken);
-        query = "from event where (owner, =, %s) where (startedAt, >=, %s) where (endedAt, <=, %s) select (eventID,title,startedAt,endedAt,description,owner)".formatted(mail.get(),targetDay.format(formatter)+" 00:00:00", targetDay.format(formatter) + " 23:59:59");
+        query = String.format("from event where (owner, =, %s) where (startedAt, >=, %s) where (endedAt, <=, %s) select (eventID,title,startedAt,endedAt,description,owner)",mail.get(),targetDay.format(formatter)+" 00:00:00", targetDay.format(formatter) + " 23:59:59");
 
         String response = communicateWithDB(query);
         System.out.println(response);
@@ -75,7 +75,7 @@ public class EventListHandler extends BaseHandler {
             responseBody = StringToJsonConverter.convertToJson(events);
         }
 
-        exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "http://localhost:3009");
+        exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
         exchange.getResponseHeaders().add("Content-Type", "application/json; charset=UTF-8");
         exchange.sendResponseHeaders(200, responseBody.getBytes().length);
         OutputStream os = exchange.getResponseBody();

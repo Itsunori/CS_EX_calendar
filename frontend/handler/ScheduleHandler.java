@@ -29,7 +29,7 @@ public class ScheduleHandler implements HttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
         String token = getCookie(exchange);
         String template = Files.readString( Paths.get("pages/schedule.html.jkt").toAbsolutePath().normalize(), StandardCharsets.UTF_8);
-
+        System.out.println(token);
         URI requestUri = exchange.getRequestURI();
         Map<String, String> queryParams = parseQueryParams(requestUri.getRawQuery());        
         int year, month, day;
@@ -55,7 +55,6 @@ public class ScheduleHandler implements HttpHandler {
         String query = String.format("accessToken=%s&year=%d&month=%d&day=%d",
                 URLEncoder.encode(token, StandardCharsets.UTF_8.toString()),
                 year, month, day);
-
         @SuppressWarnings("deprecation")
         URL url = new URL(baseUrl + "?" + query);
 
@@ -131,7 +130,6 @@ public class ScheduleHandler implements HttpHandler {
                     }
                 }
             }
-            
             token = cookieMap.get("access_token");
         }
         return token;

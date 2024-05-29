@@ -12,7 +12,7 @@ function getCookie(name) {
 function checkAccessToken() {
     const token = getCookie('access_token');
     if (!token) {
-        window.location.replace("http://localhost:3009/login/");
+        window.location.replace(`http://${location.host}/login/`);
     }
 }
 
