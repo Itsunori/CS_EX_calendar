@@ -44,7 +44,7 @@ function createEvent() {
     .then(response => console.log("create event: " + response.ok))
 }
 
-createEvent();
+// createEvent();
 
 function eventDetail() {
     const token = getCookie('access_token');
@@ -61,7 +61,7 @@ function eventDetail() {
     .catch(error => console.error('Error:', error));
 }
 
-eventDetail();
+// eventDetail();
 
 function editEvent() {
     const token = getCookie('access_token');
@@ -85,7 +85,7 @@ function editEvent() {
     .then(response => console.log("edit event: " + response.ok))
 }
 
-editEvent();
+// editEvent();
 
 function deleteEvent() {
     const token = getCookie('access_token');
@@ -106,4 +106,4 @@ function deleteEvent() {
     .then(response => console.log("delete event: " + response.ok))
 }
 
-deleteEvent();
+// deleteEvent();
